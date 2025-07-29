@@ -33,6 +33,14 @@ let currentWordIndex = 0;
 let userAnswer = [];
 let fallingLetters = [];
 let animationFrameId = null;
+const letterImages = {};
+
+Object.entries(letterMap).forEach(([ltr, num]) => {
+    const img = new Image();
+    img.src = `./letters/${num}.png`;
+    letterImages[ltr] = img;
+  });
+
 
 function speakWord(word) {
   window.speechSynthesis.cancel();
@@ -136,7 +144,8 @@ function renderGame() {
     letters.sort(() => Math.random() - 0.5);
     letters.forEach(ltr => {
       const ltrDiv = document.createElement('img');
-      ltrDiv.src = `./letters/${letterMap[ltr]}.png`;
+      ltrDiv.src = letterImages[ltr].src; // במקום לטעון מחדש
+    //   ltrDiv.src = `./letters/${letterMap[ltr]}.png`;
       ltrDiv.className = 'choice-letter';
       ltrDiv.alt = ltr;
       ltrDiv.onclick = () => {
@@ -218,7 +227,9 @@ function renderGame() {
     fallingLetters.forEach((obj, idx) => {
       obj.y += obj.speed;
       const ltrDiv = document.createElement('img');
-      ltrDiv.src = `./letters/${letterMap[obj.letter]}.png`;
+       ltrDiv.src = letterImages[obj.letter].src; // במקום לטעון מחדש
+
+    //   ltrDiv.src = `./letters/${letterMap[obj.letter]}.png`;
       ltrDiv.className = 'letter-falling';
       ltrDiv.style.left = `${obj.x}px`;
       ltrDiv.style.top = `${obj.y}px`;
