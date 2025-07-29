@@ -35,9 +35,13 @@ let fallingLetters = [];
 let animationFrameId = null;
 
 function speakWord(word) {
-  window.speechSynthesis.cancel(); // עוצר קריאות קודמות
+  window.speechSynthesis.cancel();
   const utter = new window.SpeechSynthesisUtterance(word);
   utter.lang = "he-IL";
+  // בחר קול עברי אם קיים
+  const voices = window.speechSynthesis.getVoices();
+  const hebrewVoice = voices.find(v => v.lang === "he-IL");
+  if (hebrewVoice) utter.voice = hebrewVoice;
   window.speechSynthesis.speak(utter);
 }
 
@@ -151,14 +155,23 @@ function renderGame() {
     finishBtn.textContent = 'סיימתי!';
     finishBtn.onclick = () => {
       if (userAnswer.join('') === wordObj.word) {
-        alert('כל הכבוד!');
-        userAnswer = [];
-        currentWordIndex = (currentWordIndex + 1) % words.length;
-        renderGame();
+        showEffect('success');
+        setTimeout(() => {
+          // מילה רנדומלית חדשה
+          let nextIndex;
+          do {
+            nextIndex = Math.floor(Math.random() * words.length);
+          } while (nextIndex === currentWordIndex && words.length > 1);
+          currentWordIndex = nextIndex;
+          userAnswer = Array(words[currentWordIndex].word.length).fill("");
+          renderGame();
+        }, 1500);
       } else {
-        alert('נסה שוב!');
-        userAnswer = [];
-        renderGame();
+        showEffect('fail');
+        setTimeout(() => {
+          userAnswer = Array(wordObj.word.length).fill("");
+          renderGame();
+        }, 1200);
       }
     };
     root.appendChild(finishBtn);
@@ -244,6 +257,27 @@ function renderGame() {
 
 function addPointerDown(element, handler) {
   element.addEventListener('pointerdown', handler);
+}
+
+function showEffect(type) {
+    console.log("show effect");
+    
+  const effect = document.getElementById('effect');
+  if (type === 'success') {
+    console.log("sucess");
+    effect.innerHTML = "🎉🥳🎊";
+    effect.className = "show";
+    setTimeout(() => { effect.className = ""; effect.innerHTML = ""; }, 1500);
+  } else if (type === 'fail') {
+    effect.innerHTML = "😢";
+    effect.className = "show";
+    document.getElementById('game-root').classList.add('shake');
+    setTimeout(() => {
+      effect.className = "";
+      effect.innerHTML = "";
+      document.getElementById('game-root').classList.remove('shake');
+    }, 1200);
+  }
 }
 
 renderGame();
