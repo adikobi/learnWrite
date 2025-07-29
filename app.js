@@ -45,7 +45,11 @@ Object.entries(letterMap).forEach(([ltr, num]) => {
 
 
 function speakWord(word) {
+  console.log("inside speak word");
   window.speechSynthesis.cancel();
+
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
   const utter = new window.SpeechSynthesisUtterance(word);
   utter.lang = "he-IL";
   // בחר קול עברי אם קיים
@@ -53,6 +57,8 @@ function speakWord(word) {
   const hebrewVoice = voices.find(v => v.lang === "he-IL");
   if (hebrewVoice) utter.voice = hebrewVoice;
   window.speechSynthesis.speak(utter);
+  console.log("done speak word");
+
 }
 
 function renderGame() {
