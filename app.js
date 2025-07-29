@@ -34,6 +34,8 @@ let userAnswer = [];
 let fallingLetters = [];
 let animationFrameId = null;
 const letterImages = {};
+let currFlag = 0;
+
 
 Object.entries(letterMap).forEach(([ltr, num]) => {
     const img = new Image();
@@ -145,7 +147,6 @@ function renderGame() {
     letters.forEach(ltr => {
       const ltrDiv = document.createElement('img');
       ltrDiv.src = letterImages[ltr].src; // במקום לטעון מחדש
-    //   ltrDiv.src = `./letters/${letterMap[ltr]}.png`;
       ltrDiv.className = 'choice-letter';
       ltrDiv.alt = ltr;
       ltrDiv.onclick = () => {
@@ -200,7 +201,8 @@ function renderGame() {
   function createFallingLetter(correctLetter) {
     // 1 מתוך 3 תהיה האות הנכונה, השאר רנדומלי
     let ltr;
-    if (fallingLetters.length === 0) {
+
+    if (currFlag % 4 === 0) {
       ltr = correctLetter;
     } else {
       const allLetters = Object.keys(letterMap);
@@ -208,6 +210,8 @@ function renderGame() {
         ltr = allLetters[Math.floor(Math.random() * allLetters.length)];
       } while (ltr === correctLetter);
     }
+
+    currFlag +=1;
     return {
       letter: ltr,
       x: Math.random() * 300 + 20, // מיקום אופקי רנדומלי
@@ -228,8 +232,6 @@ function renderGame() {
       obj.y += obj.speed;
       const ltrDiv = document.createElement('img');
        ltrDiv.src = letterImages[obj.letter].src; // במקום לטעון מחדש
-
-    //   ltrDiv.src = `./letters/${letterMap[obj.letter]}.png`;
       ltrDiv.className = 'letter-falling';
       ltrDiv.style.left = `${obj.x}px`;
       ltrDiv.style.top = `${obj.y}px`;
