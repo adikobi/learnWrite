@@ -35,6 +35,7 @@ let fallingLetters = [];
 let animationFrameId = null;
 
 function speakWord(word) {
+  window.speechSynthesis.cancel(); // עוצר קריאות קודמות
   const utter = new window.SpeechSynthesisUtterance(word);
   utter.lang = "he-IL";
   window.speechSynthesis.speak(utter);
@@ -57,7 +58,7 @@ function renderGame() {
   emojiBtn.style.cursor = 'pointer';
   emojiBtn.textContent = wordObj.emoji;
   emojiBtn.title = "הקש להקראה";
-  emojiBtn.onclick = () => speakWord(wordObj.word);
+  addPointerDown(emojiBtn, () => speakWord(wordObj.word));
   root.appendChild(emojiBtn);
 
   // שומרי מקום לאותיות
@@ -209,15 +210,12 @@ function renderGame() {
       ltrDiv.style.left = `${obj.x}px`;
       ltrDiv.style.top = `${obj.y}px`;
       ltrDiv.alt = obj.letter;
-      ltrDiv.onmousedown = (e) => {
-        console.log("letter click!!");
-        e.preventDefault();
-
-        userAnswer[0] = obj.letter;
-        stopFallingAnimation();
-        renderGame();
-
-      };
+      addPointerDown(ltrDiv, (e) => {
+          userAnswer[0] = obj.letter;
+          stopFallingAnimation();
+          renderGame();
+        
+      });
       fallArea.appendChild(ltrDiv);
     });
   
@@ -242,6 +240,10 @@ function renderGame() {
     }
   }
 
+}
+
+function addPointerDown(element, handler) {
+  element.addEventListener('pointerdown', handler);
 }
 
 renderGame();
