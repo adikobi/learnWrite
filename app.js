@@ -78,7 +78,14 @@ function renderGame() {
   emojiBtn.style.cursor = 'pointer';
   emojiBtn.textContent = wordObj.emoji;
   emojiBtn.title = "הקש להקראה";
-  addPointerDown(emojiBtn, () => speakWord(wordObj.word));
+
+  emojiBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevent
+    speakWord(wordObj.word);
+  });
+
+
+
   root.appendChild(emojiBtn);
 
   // שומרי מקום לאותיות
