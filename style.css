@@ -1,4 +1,16 @@
 /* style.css */
+
+body,
+button,
+input,
+textarea,
+select,
+.letter-slot, /* רכיבים ספציפיים שמוגדרים אצלך עם טקסט */
+.choice-letter,
+.finish-btn {
+    font-family: 'Heebo', sans-serif;
+}
+
 body {
     font-family: 'Heebo', sans-serif;
     background: #f0f8ff;
@@ -114,3 +126,4 @@ body {
   100% { transform: translateX(0);}
 
 }
+
