@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #3a2d4a;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,21 +14,35 @@
   transition: opacity 1s ease-in-out;
 }
 
-#splash-logo {
-  width: 200px;
-  max-width: 80%;
-  animation: pulse 2s infinite ease-in-out;
+#splash-animation-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
+#splash-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: spin 10s linear infinite;
+}
+
+#splash-letter {
+  font-family: 'Rubik Moonrocks', cursive;
+  font-size: 150px;
+  color: #27273e;
+  z-index: 1;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  70% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0.95);
+  to {
+    transform: rotate(360deg);
   }
 }
 
