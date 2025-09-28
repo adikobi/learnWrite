@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>משחק כתיבה בעברית</title>
+  <title>קסם הכתיבה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div id="game-root"></div>
+  <div id="splash-screen">
+    <div id="logo">
+      <h1>קסם הכתיבה</h1>
+      <div class="sparkle">✨</div>
+    </div>
+  </div>
+  <div id="game-root" style="display: none;"></div>
   <div id="effect"></div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
