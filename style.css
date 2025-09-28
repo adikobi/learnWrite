@@ -96,11 +96,12 @@ body {
     height: 60px;
     border-bottom: 3px solid #1976d2;
     font-size: 2em;
-    text-align: center;
-    line-height: 60px;
     background: #fff;
     border-radius: 8px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .choices-row {
     display: flex;
