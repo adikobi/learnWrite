@@ -21,7 +21,7 @@
 }
 
 #logo h1 {
-  font-family: 'Heebo', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   font-size: 4rem;
   color: #f1c40f;
   text-shadow: 2px 2px 4px #000000;
@@ -47,11 +47,11 @@ select,
 .letter-slot,
 .choice-letter,
 .finish-btn {
-    font-family: 'Heebo', sans-serif;
+    font-family: 'Fredoka', sans-serif;
 }
 
 body {
-    font-family: 'Heebo', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     background: #f0f8ff;
     margin: 0;
     padding: 0;
