@@ -143,17 +143,25 @@ function preloadImages(callback) {
 }
 
 window.addEventListener('load', () => {
-  preloadImages(() => {
-    // Hide splash screen and show the game
-    const splashScreen = document.getElementById('splash-screen');
-    const gameRoot = document.getElementById('game-root');
+  const minSplashTime = 3000; // Minimum splash screen time: 3 seconds
+  const startTime = Date.now();
 
-    splashScreen.style.opacity = '0';
+  preloadImages(() => {
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minSplashTime - elapsedTime);
+
     setTimeout(() => {
-      splashScreen.style.display = 'none';
-      gameRoot.style.display = 'block';
-      renderGame();
-    }, 1000); // Match CSS transition time
+      const splashScreen = document.getElementById('splash-screen');
+      const gameRoot = document.getElementById('game-root');
+
+      splashScreen.style.opacity = '0';
+      // Wait for the fade-out transition to finish before hiding it
+      setTimeout(() => {
+        splashScreen.style.display = 'none';
+        gameRoot.style.display = 'block';
+        renderGame();
+      }, 1000); // This should match the CSS transition duration
+    }, remainingTime);
   });
 });
 
