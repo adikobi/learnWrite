@@ -47,9 +47,9 @@
 #splash-title {
   font-family: 'Fredoka', sans-serif;
   font-size: 2.5rem;
-  color: #f1c40f;
+  color: #FFD700; /* A slightly different, golden yellow */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin: 0;
+  margin-top: 10px; /* Moves the title down a bit */
 }
 
 @keyframes spin {
@@ -132,11 +132,11 @@ body {
     margin-bottom: 20px;
   }
   .choice-letter {
-    width: 70px;
-    height: 70px;
-    font-size: 2.5em;
+    width: 80px;
+    height: 80px;
+    font-size: 3em;
     text-align: center;
-    line-height: 70px;
+    line-height: 80px;
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
