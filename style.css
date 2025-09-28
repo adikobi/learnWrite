@@ -47,9 +47,9 @@
 #splash-title {
   font-family: 'Fredoka', sans-serif;
   font-size: 2.5rem;
-  color: #FFD700; /* A slightly different, golden yellow */
+  color: #fff400; /* Brighter yellow */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin-top: 10px; /* Moves the title down a bit */
+  margin-top: 25px; /* Moves the title down more */
 }
 
 @keyframes spin {
@@ -102,8 +102,8 @@ body {
   }
   .letter-falling {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     cursor: pointer;
   }
   .letter-slots {
@@ -134,9 +134,6 @@ body {
   .choice-letter {
     width: 80px;
     height: 80px;
-    font-size: 3em;
-    text-align: center;
-    line-height: 80px;
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
