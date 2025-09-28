@@ -144,24 +144,34 @@ function preloadImages(callback) {
 
 window.addEventListener('load', () => {
   const minSplashTime = 3000; // Minimum splash screen time: 3 seconds
+  const maxSplashTime = 8000; // Maximum splash screen time: 8 seconds
   const startTime = Date.now();
+  let splashHidden = false;
+
+  function hideSplashScreen() {
+    if (splashHidden) return;
+    splashHidden = true;
+
+    const splashScreen = document.getElementById('splash-screen');
+    const gameRoot = document.getElementById('game-root');
+
+    splashScreen.style.opacity = '0';
+    // Wait for the fade-out transition to finish before hiding it
+    setTimeout(() => {
+      splashScreen.style.display = 'none';
+      gameRoot.style.display = 'block';
+      renderGame();
+    }, 1000); // This should match the CSS transition duration
+  }
+
+  // Set a maximum timeout
+  setTimeout(hideSplashScreen, maxSplashTime);
 
   preloadImages(() => {
     const elapsedTime = Date.now() - startTime;
     const remainingTime = Math.max(0, minSplashTime - elapsedTime);
 
-    setTimeout(() => {
-      const splashScreen = document.getElementById('splash-screen');
-      const gameRoot = document.getElementById('game-root');
-
-      splashScreen.style.opacity = '0';
-      // Wait for the fade-out transition to finish before hiding it
-      setTimeout(() => {
-        splashScreen.style.display = 'none';
-        gameRoot.style.display = 'block';
-        renderGame();
-      }, 1000); // This should match the CSS transition duration
-    }, remainingTime);
+    setTimeout(hideSplashScreen, remainingTime);
   });
 });
 
