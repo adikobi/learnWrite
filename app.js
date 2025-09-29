@@ -47,7 +47,7 @@ const words = [
   { word: "אופניים", emoji: "🚲" },
   { word: "סירה", emoji: "⛵" },
   { word: "כובע", emoji: "🎩" },
-  { word: "מעיל", emoji: "🧥" },        //check
+  { word: "מעיל", emoji: "🧥" },
   { word: "חולצה", emoji: "👕" },
   { word: "מכנסיים", emoji: "👖" },
   { word: "גרב", emoji: "🧦" },
@@ -58,12 +58,12 @@ const words = [
   { word: "גמל", emoji: "🐫" },
   { word: "כבשה", emoji: "🐑" },
   { word: "פרה", emoji: "🐄" },
-  { word: "תרנגול", emoji: "🐓" },   //
-  { word: "תרנגולת", emoji: "🐔" },  //
+  { word: "תרנגול", emoji: "🐓" },
+  { word: "תרנגולת", emoji: "🐔" },
   { word: "ברווז", emoji: "🦆" },
   { word: "סוס", emoji: "🐎" },
-  { word: "חמור", emoji: "🐴" },     //
-  { word: "שועל", emoji: "🦊" },    //
+  { word: "חמור", emoji: "🐴" },
+  { word: "שועל", emoji: "🦊" },
   { word: "דבורה", emoji: "🐝" },
   { word: "פרפר", emoji: "🦋" },
   { word: "ציפור", emoji: "🐦" },
@@ -111,11 +111,74 @@ const letterImages = {};
 let currFlag = 0;
 
 
-Object.entries(letterMap).forEach(([ltr, num]) => {
+function preloadImages(callback) {
+  let loadedImages = 0;
+  const imageEntries = Object.entries(letterMap);
+  const totalImages = imageEntries.length;
+  console.log(`Starting to preload ${totalImages} images...`);
+
+  if (totalImages === 0) {
+    console.log("No images to preload. Calling callback immediately.");
+    callback();
+    return;
+  }
+
+  imageEntries.forEach(([ltr, num]) => {
     const img = new Image();
     img.src = `./letters/${num}.png`;
-    letterImages[ltr] = img;
+    img.onload = () => {
+      loadedImages++;
+      letterImages[ltr] = img;
+      console.log(`Successfully loaded image ${loadedImages}/${totalImages}: ${ltr} (${num}.png)`);
+      if (loadedImages === totalImages) {
+        console.log("All images loaded successfully! Calling callback.");
+        callback();
+      }
+    };
+    img.onerror = () => {
+      loadedImages++;
+      console.error(`Failed to load image for letter: ${ltr} (${num}.png)`);
+      // Still count it as "loaded" to prevent getting stuck
+      if (loadedImages === totalImages) {
+        console.log("Finished attempting to load all images (with some errors). Calling callback.");
+        callback();
+      }
+    };
   });
+}
+
+window.addEventListener('load', () => {
+  const minSplashTime = 3000; // Minimum splash screen time: 3 seconds
+  const maxSplashTime = 8000; // Maximum splash screen time: 8 seconds
+  const startTime = Date.now();
+  let splashHidden = false;
+
+  function hideSplashScreen() {
+    if (splashHidden) return;
+    splashHidden = true;
+
+    const splashScreen = document.getElementById('splash-screen');
+    const gameRoot = document.getElementById('game-root');
+
+    splashScreen.style.opacity = '0';
+    // Wait for the fade-out transition to finish before hiding it
+    setTimeout(() => {
+      splashScreen.style.display = 'none';
+      gameRoot.style.display = 'block';
+      renderGame();
+    }, 1000); // This should match the CSS transition duration
+  }
+
+  // Set a maximum timeout
+  setTimeout(hideSplashScreen, maxSplashTime);
+
+  preloadImages(() => {
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minSplashTime - elapsedTime);
+
+    setTimeout(hideSplashScreen, remainingTime);
+  });
+});
 
 
 function speakWord(word) {
@@ -189,31 +252,6 @@ function renderGame() {
     // אות ראשונה - אותיות "נופלות"
     const fallArea = document.createElement('div');
     fallArea.className = 'letter-fall-area';
-    // בחר 4 אותיות רנדומליות + האות הנכונה
-    // const correctLetter = wordObj.word[0];
-    // const letters = [correctLetter];
-    // while (letters.length < 4) {
-    //   const allLetters = Object.keys(letterMap);
-    //   const rand = allLetters[Math.floor(Math.random() * allLetters.length)];
-    //   if (!letters.includes(rand)) letters.push(rand);
-    // }
-    // // ערבב
-    // letters.sort(() => Math.random() - 0.5);
-    // // "הנפלה" (פשוט מיקום רנדומלי)
-    // letters.forEach((ltr, idx) => {
-    //   const ltrDiv = document.createElement('img');
-    //   ltrDiv.src = `./letters/${letterMap[ltr]}.png`;
-    //   console.log(ltrDiv.src);
-    //   ltrDiv.className = 'letter-falling';
-    //   ltrDiv.style.left = `${20 + idx * 80}px`;
-    //   ltrDiv.style.top = `${20 + Math.random() * 80}px`;
-    //   ltrDiv.alt = ltr;
-    //   ltrDiv.onclick = () => {
-    //     userAnswer[0] = ltr;
-    //     renderGame();
-    //   };
-    //   fallArea.appendChild(ltrDiv);
-    // });
     root.appendChild(fallArea);
     startFallingLetters(wordObj.word[0]);
 
@@ -284,9 +322,9 @@ function renderGame() {
     }
     animateFallingLetters(correctLetter);
   }
-  
+
   function createFallingLetter(correctLetter) {
-    // 1 מתוך 3 תהיה האות הנכונה, השאר רנדומלי
+    // 1 מתוך 4 תהיה האות הנכונה, השאר רנדומלי
     let ltr;
 
     if (currFlag % 4 === 0) {
@@ -301,51 +339,59 @@ function renderGame() {
     currFlag +=1;
     return {
       letter: ltr,
-      x: Math.random() * 300 + 20, // מיקום אופקי רנדומלי
-      y: -60, // מתחיל מעל המסך
-      speed: Math.random()  + 0.5 // מהירות רנדומלית
+      x: Math.random() * 300 + 20,
+      y: -60,
+      speed: Math.random() * 0.5 + 0.5, // Slower fall
+      rotation: Math.random() * 180 - 90, // Start with a random rotation
+      rotationSpeed: (Math.random() - 0.5) * 2, // Rotate left or right
+      horizontalWave: Math.random() * Math.PI * 2,
+      horizontalAmplitude: Math.random() * 20 + 10
     };
   }
-  
+
   function animateFallingLetters(correctLetter) {
     const fallArea = document.querySelector('.letter-fall-area');
     if (!fallArea) return;
-  
-    // נקה את האזור
+
     fallArea.innerHTML = '';
-  
-    // עדכן מיקום כל אות
+
     fallingLetters.forEach((obj, idx) => {
+      // Update position and rotation
       obj.y += obj.speed;
+      obj.rotation += obj.rotationSpeed;
+      obj.horizontalWave += 0.03; // Wobble speed
+      const horizontalOffset = Math.sin(obj.horizontalWave) * obj.horizontalAmplitude;
+
       const ltrDiv = document.createElement('img');
-       ltrDiv.src = letterImages[obj.letter].src; // במקום לטעון מחדש
+      ltrDiv.src = letterImages[obj.letter].src;
       ltrDiv.className = 'letter-falling';
-      ltrDiv.style.left = `${obj.x}px`;
+      ltrDiv.style.left = `${obj.x + horizontalOffset}px`;
       ltrDiv.style.top = `${obj.y}px`;
+      ltrDiv.style.transform = `rotate(${obj.rotation}deg)`;
       ltrDiv.alt = obj.letter;
+
       addPointerDown(ltrDiv, (e) => {
           userAnswer[0] = obj.letter;
           stopFallingAnimation();
           renderGame();
-        
       });
       fallArea.appendChild(ltrDiv);
     });
-  
-    // הסר אותיות שיצאו מהמסך, והוסף חדשות
+
+    // Remove letters that are off-screen and add new ones
     for (let i = fallingLetters.length - 1; i >= 0; i--) {
-      if (fallingLetters[i].y > 400) { // גובה האזור
+      if (fallingLetters[i].y > 400) { // Area height
         fallingLetters.splice(i, 1);
         fallingLetters.push(createFallingLetter(correctLetter));
       }
     }
-  
-    // המשך אנימציה אם לא נבחרה אות
+
+    // Continue animation if no letter has been selected
     if (!userAnswer[0]) {
       animationFrameId = requestAnimationFrame(() => animateFallingLetters(correctLetter));
     }
   }
-  
+
   function stopFallingAnimation() {
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
@@ -360,17 +406,23 @@ function addPointerDown(element, handler) {
 }
 
 function showEffect(type) {
-    console.log("show effect");
-    
   const effect = document.getElementById('effect');
   if (type === 'success') {
-    console.log("sucess");
-    effect.innerHTML = "🎉🥳🎊";
-    effect.className = "show";
-    setTimeout(() => { effect.className = ""; effect.innerHTML = ""; }, 1500);
+    // Use confetti for success
+    confetti({
+      particleCount: 150,
+      spread: 90,
+      origin: { y: 0.6 }
+    });
+    effect.innerHTML = "כל הכבוד!";
+    effect.className = "show success";
+    setTimeout(() => {
+      effect.className = "";
+      effect.innerHTML = "";
+    }, 1500);
   } else if (type === 'fail') {
-    effect.innerHTML = "😢";
-    effect.className = "show";
+    effect.innerHTML = "נסו שוב... 😢";
+    effect.className = "show fail";
     document.getElementById('game-root').classList.add('shake');
     setTimeout(() => {
       effect.className = "";
@@ -379,5 +431,3 @@ function showEffect(type) {
     }, 1200);
   }
 }
-
-renderGame();
