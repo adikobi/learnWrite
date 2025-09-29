@@ -164,8 +164,8 @@ body {
   @media (max-width: 600px) {
     #game-root { max-width: 100vw; }
     .word-image { width: 80px; height: 80px; }
-    .letter-falling, .choice-letter { width: 40px; height: 40px; font-size: 1.2em; }
-    .letter-slot { width: 40px; height: 50px; font-size: 1.5em; }
+    .letter-falling, .choice-letter { width: 70px; height: 70px; }
+    .letter-slot { width: 50px; height: 60px; font-size: 2em; }
   }
 #effect {
   position: fixed;

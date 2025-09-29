@@ -115,8 +115,10 @@ function preloadImages(callback) {
   let loadedImages = 0;
   const imageEntries = Object.entries(letterMap);
   const totalImages = imageEntries.length;
+  console.log(`Starting to preload ${totalImages} images...`);
 
   if (totalImages === 0) {
+    console.log("No images to preload. Calling callback immediately.");
     callback();
     return;
   }
@@ -127,15 +129,18 @@ function preloadImages(callback) {
     img.onload = () => {
       loadedImages++;
       letterImages[ltr] = img;
+      console.log(`Successfully loaded image ${loadedImages}/${totalImages}: ${ltr} (${num}.png)`);
       if (loadedImages === totalImages) {
+        console.log("All images loaded successfully! Calling callback.");
         callback();
       }
     };
     img.onerror = () => {
-      // Handle error if needed, maybe count it as loaded
       loadedImages++;
-      console.error(`Failed to load image for letter: ${ltr}`);
+      console.error(`Failed to load image for letter: ${ltr} (${num}.png)`);
+      // Still count it as "loaded" to prevent getting stuck
       if (loadedImages === totalImages) {
+        console.log("Finished attempting to load all images (with some errors). Calling callback.");
         callback();
       }
     };
