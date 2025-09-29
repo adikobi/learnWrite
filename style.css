@@ -132,8 +132,8 @@ body {
     margin-bottom: 20px;
   }
   .choice-letter {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
