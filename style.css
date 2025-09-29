@@ -102,8 +102,8 @@ body {
   }
   .letter-falling {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
   }
   .letter-slots {
